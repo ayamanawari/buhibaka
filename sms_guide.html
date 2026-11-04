@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buhibaka - SMS Guide</title>
+    <!-- FontAwesome CDN para sa icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #e8e2d5 0%, #d5cbb8 100%);
+            --text-color: #223520;
+            --card-bg: rgba(255, 255, 255, 0.45);
+            --card-border: rgba(59, 93, 56, 0.2);
+            --header-border: rgba(59, 93, 56, 0.15);
+            --subtext-color: #4a5c48;
+            --val-color: #3b5d38;
+            --badge-bg: #3b5d38;
+            --alert-bg: rgba(255, 255, 255, 0.45);
+            --alert-code-bg: rgba(255, 255, 255, 0.3);
+            --btn-bg: rgba(224, 213, 193, 0.8);
+            --btn-border: #bfae95;
+            --btn-hover: rgba(209, 195, 173, 1);
+            --navbar-bg: rgba(255, 255, 255, 0.45);
+            --navbar-border: rgba(59, 93, 56, 0.2);
+            --nav-item-color: #4a5c48;
+            --nav-active-color: #3b5d38;
+            --shadow: rgba(0,0,0,0.03);
+        }
+
+        .dark-mode {
+            --bg-gradient: linear-gradient(135deg, #121c11 0%, #0a1109 100%);
+            --text-color: #d4ebd0;
+            --card-bg: rgba(20, 32, 19, 0.6);
+            --card-border: rgba(92, 143, 88, 0.3);
+            --header-border: rgba(92, 143, 88, 0.2);
+            --subtext-color: #a3c9a0;
+            --val-color: #85bc81;
+            --badge-bg: rgba(92, 143, 88, 0.4);
+            --alert-bg: rgba(20, 32, 19, 0.6);
+            --alert-code-bg: rgba(10, 17, 9, 0.4);
+            --btn-bg: rgba(45, 66, 43, 0.8);
+            --btn-border: #5f8f5c;
+            --btn-hover: rgba(59, 87, 56, 1);
+            --navbar-bg: rgba(20, 32, 19, 0.6);
+            --navbar-border: rgba(92, 143, 88, 0.3);
+            --nav-item-color: #a3c9a0;
+            --nav-active-color: #85bc81;
+            --shadow: rgba(0,0,0,0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        body {
+            background: var(--bg-gradient);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+            padding-bottom: 30px;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 700px;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 16px;
+            position: relative;
+        }
+
+        /* Header Section */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--header-border);
+            margin-bottom: 14px;
+        }
+        .header-section h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            background: var(--btn-bg);
+            border: 1px solid var(--btn-border);
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .theme-toggle-btn:hover {
+            background: var(--btn-hover);
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--val-color);
+            margin: 14px 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Transparent Guide Card */
+        .guide-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .command-badge {
+            background-color: var(--badge-bg);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 11px;
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+            flex-shrink: 0;
+            border: 1px solid var(--card-border);
+        }
+        .command-info h4 {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 2px;
+        }
+        .command-info p {
+            font-size: 11px;
+            color: var(--subtext-color);
+        }
+
+        /* Transparent Alert Card */
+        .alert-card {
+            background: var(--alert-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid #a94442;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+        .alert-card h4 {
+            font-size: 12px;
+            font-weight: 700;
+            color: #a94442;
+            margin-bottom: 4px;
+        }
+        .alert-code {
+            display: block;
+            background: var(--alert-code-bg);
+            border: 1px solid var(--card-border);
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 11px;
+            color: var(--text-color);
+            margin-top: 4px;
+            white-space: pre-line;
+        }
+
+        /* Transparent Bottom Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-top: 1px solid var(--navbar-border);
+            padding: 10px 0;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 700px;
+            margin-top: auto;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        .nav-item {
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--nav-item-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            transition: color 0.2s;
+        }
+        .nav-item.active {
+            color: var(--nav-active-color);
+            font-weight: 700;
+        }
+        .nav-item:hover {
+            color: var(--nav-active-color);
+        }
+    </style>
+</head>
+<body onload="loadThemePreference()">
+
+    <div class="app-container">
+        <!-- Header Section with Theme Toggle -->
+        <div class="header-section">
+            <h1>SMS Commands Guide</h1>
+            <button type="button" class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()">
+                <i class="fa-solid fa-moon" id="theme-icon"></i> <span id="theme-text">Dark Mode</span>
+            </button>
+        </div>
+
+        <!-- Available Two-Way SMS Command Section -->
+        <div class="section-title">Available Two-Way SMS Command</div>
+
+        <div class="guide-card">
+            <div class="command-badge">STATUS</div>
+            <div class="command-info">
+                <h4>Check Status</h4>
+                <p>Replies with real-time Water %, Feed %, and Turbidity status.</p>
+            </div>
+        </div>
+
+        <div class="guide-card">
+            <div class="command-badge">REFILL</div>
+            <div class="command-info">
+                <h4>Manual Refill</h4>
+                <p>Triggers manual water refill (activates solenoid valve).</p>
+            </div>
+        </div>
+
+        <div class="guide-card">
+            <div class="command-badge">FEED</div>
+            <div class="command-info">
+                <h4>Manual Feed</h4>
+                <p>Triggers manual feed dispense (activates Feed Motor).</p>
+            </div>
+        </div>
+
+        <div class="guide-card">
+            <div class="command-badge">STOP</div>
+            <div class="command-info">
+                <h4>Emergency Stop</h4>
+                <p>Immediately stops active refill or dispense operations.</p>
+            </div>
+        </div>
+
+        <div class="guide-card">
+            <div class="command-badge">AUTO ON</div>
+            <div class="command-info">
+                <h4>Enable Automation</h4>
+                <p>Enables automatic sensor-based threshold refilling.</p>
+            </div>
+        </div>
+
+        <div class="guide-card">
+            <div class="command-badge">AUTO OFF</div>
+            <div class="command-info">
+                <h4>Disable Automation</h4>
+                <p>Disables automatic refilling (manual / SMS mode only).</p>
+            </div>
+        </div>
+
+        <!-- Automated SMS Alert Notifications Section -->
+        <div class="section-title">Automated SMS Alert Notifications</div>
+
+        <div class="alert-card">
+            <h4>Low Water Alert</h4>
+            <div class="alert-code">"ALERT: Water level low (30%). Automatic refill started."</div>
+        </div>
+
+        <div class="alert-card">
+            <h4>Low Feed Alert</h4>
+            <div class="alert-code">"ALERT: Feed level low (30%). Automatic dispense started."</div>
+        </div>
+
+        <div class="alert-card">
+            <h4>Dirty Water Alert</h4>
+            <div class="alert-code">"WARNING: High water turbidity detected. Please check trough."</div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="navbar">
+        <a href="dashboard.html" class="nav-item">Dashboard</a>
+        <a href="history.html" class="nav-item">History</a>
+        <a href="settings.html" class="nav-item">Settings</a>
+        <a href="sms_guide.html" class="nav-item active">SMS Guide</a>
+        <a href="index.html" class="nav-item" style="color: #a94442; font-weight: bold;">Log Out</a>
+    </div>
+
+    <script>
+        function loadThemePreference() {
+            if(localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('theme-icon').className = "fa-solid fa-sun";
+                document.getElementById('theme-text').innerText = "Light Mode";
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            let icon = document.getElementById('theme-icon');
+            let text = document.getElementById('theme-text');
+
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                icon.className = "fa-solid fa-sun";
+                text.innerText = "Light Mode";
+            } else {
+                localStorage.setItem('theme', 'light');
+                icon.className = "fa-solid fa-moon";
+                text.innerText = "Dark Mode";
+            }
+        }
+    </script>
+</body>
+</html>

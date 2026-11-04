@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buhibaka - Eco Dashboard</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #e8e2d5 0%, #d5cbb8 100%);
+            --text-color: #2c352d;
+            --card-bg: #f4f0e6;
+            --card-border: rgba(44, 53, 45, 0.12);
+            --header-bg: linear-gradient(rgba(44, 53, 45, 0.45), rgba(44, 53, 45, 0.65));
+            --header-text: #ffffff;
+            --header-subtext: #f0ece1;
+            --subtext-color: #586359;
+            --val-color: #274d31;
+            --btn-bg: #ffffff;
+            --btn-color: #274d31;
+            --btn-border: rgba(39, 77, 49, 0.3);
+            --navbar-bg: rgba(255, 255, 255, 0.9);
+            --navbar-border: rgba(59, 93, 56, 0.15);
+            --nav-item-color: #4a5c48;
+            --nav-active-color: #3b5d38;
+            --ring-bg: rgba(44, 53, 45, 0.1);
+        }
+
+        .dark-mode {
+            --bg-gradient: linear-gradient(135deg, #121c11 0%, #0a1109 100%);
+            --text-color: #d4ebd0;
+            --card-bg: rgba(20, 32, 19, 0.6);
+            --card-border: rgba(92, 143, 88, 0.3);
+            --header-bg: linear-gradient(rgba(10, 17, 9, 0.6), rgba(10, 17, 9, 0.8));
+            --header-text: #d4ebd0;
+            --header-subtext: #a3c9a0;
+            --subtext-color: #85bc81;
+            --val-color: #85bc81;
+            --btn-bg: rgba(20, 32, 19, 0.8);
+            --btn-color: #85bc81;
+            --btn-border: rgba(92, 143, 88, 0.4);
+            --navbar-bg: rgba(20, 32, 19, 0.9);
+            --navbar-border: rgba(92, 143, 88, 0.3);
+            --nav-item-color: #a3c9a0;
+            --nav-active-color: #85bc81;
+            --ring-bg: rgba(92, 143, 88, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            margin: 0;
+            padding-bottom: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .dashboard-header {
+            position: relative;
+            background-image: var(--header-bg), url('dashboardcalves.jpg');
+            background-size: cover;
+            background-position: center;
+            color: var(--header-text);
+            padding: 45px 20px 40px 20px;
+            text-align: center;
+            width: 100%;
+            border-radius: 0 0 24px 24px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(44, 53, 45, 0.15);
+        }
+        .dashboard-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .dashboard-header p {
+            font-size: 13px;
+            color: var(--header-subtext);
+            margin-top: 4px;
+            font-weight: 500;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .container {
+            padding: 16px;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Grid Layout */
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+            margin-top: 6px;
+            width: 100%;
+        }
+        .sensor-card {
+            background: var(--card-bg);
+            color: var(--text-color);
+            padding: 18px 12px;
+            border-radius: 22px;
+            text-align: center;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sensor-card.full-width {
+            grid-column: span 2;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 18px 22px;
+            align-items: center;
+        }
+        .sensor-card h3 {
+            font-size: 11px;
+            color: var(--subtext-color);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        /* Circular Progress Rings */
+        .progress-circle-container {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .progress-ring { transform: rotate(-90deg); }
+        .ring-bg { stroke: var(--ring-bg); }
+        .ring-progress { transition: stroke-dashoffset 0.5s ease, stroke 0.3s ease; }
+        .progress-text-overlay {
+            position: absolute;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 8px;
+            border: 1px solid transparent;
+        }
+        .badge-metric { font-size: 16px; padding: 8px 16px; border-radius: 14px; }
+
+        .ring-green { stroke: var(--val-color) !important; }
+        .badge-green { background-color: var(--card-border) !important; color: var(--val-color) !important; border-color: var(--card-border) !important; }
+
+        /* Buttons & Action Feedback Text */
+        .btn-mini {
+            background-color: var(--btn-bg);
+            color: var(--btn-color);
+            border: 1px solid var(--btn-border);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 4px;
+            width: 100%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-mini:hover { background-color: var(--val-color); color: #ffffff; }
+        .btn-stop {
+            background-color: rgba(180, 60, 50, 0.12) !important;
+            color: #a93226 !important;
+            border-color: rgba(180, 60, 50, 0.3) !important;
+        }
+        .btn-stop:hover { background-color: #a93226 !important; color: white !important; }
+
+        .action-status-text {
+            font-size: 9.5px;
+            color: #b9770e;
+            margin-top: 6px;
+            font-weight: 600;
+            min-height: 14px;
+            display: none;
+        }
+
+        /* Automation Box */
+        .automation-box {
+            background: var(--card-bg);
+            color: var(--text-color);
+            padding: 16px 20px;
+            border-radius: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            margin-bottom: 14px;
+            border: 1px solid var(--card-border);
+            width: 100%;
+        }
+        .automation-box span { font-weight: 600; font-size: 13px; color: var(--text-color); }
+        .switch { position: relative; display: inline-block; width: 48px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--ring-bg); transition: .4s; border-radius: 34px;
+            border: 1px solid var(--card-border);
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background-color: var(--btn-bg); transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--val-color); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        /* Summary Box */
+        .summary-box {
+            background: var(--card-bg);
+            color: var(--text-color);
+            padding: 18px; border-radius: 22px; font-size: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--card-border);
+            margin-bottom: 14px;
+            width: 100%;
+        }
+        .summary-box h4 { margin-bottom: 12px; color: var(--text-color); font-size: 13px; font-weight: 700; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--subtext-color); }
+        .summary-row span:last-child { color: var(--text-color) !important; }
+
+        /* Bottom Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background: var(--navbar-bg);
+            border-top: 1px solid var(--navbar-border);
+            padding: 10px 0;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 700px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 100;
+        }
+        .nav-item {
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--nav-item-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-item.active {
+            color: var(--nav-active-color);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body onload="checkTheme()">
+
+    <div class="dashboard-header">
+        <h1>Buhibaka Dashboard</h1>
+        <p>Smart Livestock System</p>
+    </div>
+
+    <div class="container">
+        <!-- Sensor Grid -->
+        <div class="sensor-grid">
+            <!-- Water Level -->
+            <div class="sensor-card">
+                <h3>Water Level</h3>
+                <div class="progress-circle-container">
+                    <svg class="progress-ring" width="90" height="90">
+                        <circle class="ring-bg" cx="45" cy="45" r="36" stroke-width="8" fill="none"/>
+                        <circle id="waterRing" class="ring-progress ring-green" cx="45" cy="45" r="36" stroke-width="8" fill="none" stroke-dasharray="226.2" stroke-dashoffset="135.7"/>
+                    </svg>
+                    <span id="waterText" class="progress-text-overlay">40%</span>
+                </div>
+                <button id="waterBtn" onclick="toggleWaterAction()" class="btn-mini">Refill Water</button>
+                <div id="waterStatusText" class="action-status-text">⚡ Valve Open (Refilling)</div>
+            </div>
+
+            <!-- Feed Weight -->
+            <div class="sensor-card">
+                <h3>Feed Weight</h3>
+                <div class="progress-circle-container">
+                    <svg class="progress-ring" width="90" height="90">
+                        <circle class="ring-bg" cx="45" cy="45" r="36" stroke-width="8" fill="none"/>
+                        <circle id="feedRing" class="ring-progress ring-green" cx="45" cy="45" r="36" stroke-width="8" fill="none" stroke-dasharray="226.2" stroke-dashoffset="90.5"/>
+                    </svg>
+                    <span id="fieldText" class="progress-text-overlay">60kg</span>
+                </div>
+                <button id="feedBtn" onclick="toggleFeedAction()" class="btn-mini">Dispense</button>
+                <div id="feedStatusText" class="action-status-text">⚡ Motor Active (Dispensing)</div>
+            </div>
+
+            <!-- Turbidity -->
+            <div class="sensor-card">
+                <h3>Turbidity</h3>
+                <div style="margin: 12px 0;">
+                    <span id="turbidityBadge" class="status-badge badge-green">Good</span>
+                </div>
+                <span style="font-size: 10px; color: var(--subtext-color);">Clear Water Quality</span>
+            </div>
+
+            <!-- pH Level -->
+            <div class="sensor-card">
+                <h3>pH Level</h3>
+                <div style="margin: 10px 0;">
+                    <span id="phBadge" class="status-badge badge-metric badge-green">7.2</span>
+                </div>
+                <span style="font-size: 10px; color: var(--subtext-color);">Balanced Range</span>
+            </div>
+
+            <!-- TDS Level -->
+            <div class="sensor-card full-width">
+                <div>
+                    <h3>TDS Level</h3>
+                    <div id="tdsValueText" style="font-size: 20px; font-weight: 700; color: var(--text-color);">450 ppm</div>
+                </div>
+                <span id="tdsBadge" style="font-size: 11px; font-weight: 600;" class="status-badge badge-green">Optimal Purity</span>
+            </div>
+        </div>
+
+        <!-- System Automation -->
+        <div class="automation-box">
+            <span>System Automation</span>
+            <label class="switch">
+                <input type="checkbox" checked id="autoToggle" onchange="updateAutomation()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Activity Highlights -->
+        <div class="summary-box">
+            <h4>Activity Highlights</h4>
+            <div class="summary-row">
+                <span>Water Trough:</span>
+                <span id="waterActivityTime">Refilled Today, 7:12 AM</span>
+            </div>
+            <div class="summary-row">
+                <span>Feed Bin:</span>
+                <span id="feedActivityTime">Dispensed Today, 7:30 AM</span>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="navbar">
+            <a href="dashboard.html" class="nav-item active">Dashboard</a>
+            <a href="history.html" class="nav-item">History</a>
+            <a href="settings.html" class="nav-item">Settings</a>
+            <a href="sms_guide.html" class="nav-item">SMS Guide</a>
+            <a href="index.html" class="nav-item" style="color: #a94442; font-weight: bold;">Log Out</a>
+        </div>
+    </div>
+
+    <!-- Firebase Realtime Database Integration Script -->
+    <script type="module">
+        import { db, ref, set, onValue } from "./firebase.js";
+
+        // Pakikinig ng data mula sa Firebase Realtime Database
+        const sensorRef = ref(db, 'sensors/');
+        onValue(sensorRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // Water Level
+                if (data.waterLevel !== undefined) {
+                    document.getElementById('waterText').innerText = data.waterLevel + "%";
+                    const offset = 226.2 - (226.2 * data.waterLevel) / 100;
+                    document.getElementById('waterRing').style.strokeDashoffset = offset;
+                }
+
+                // Feed Weight
+                if (data.feedWeight !== undefined) {
+                    document.getElementById('fieldText').innerText = data.feedWeight + "kg";
+                    const feedOffset = 226.2 - (226.2 * data.feedWeight) / 100;
+                    document.getElementById('feedRing').style.strokeDashoffset = feedOffset;
+                }
+
+                // Turbidity
+                if (data.turbidity) {
+                    document.getElementById('turbidityBadge').innerText = data.turbidity;
+                }
+
+                // pH Level
+                if (data.phLevel !== undefined) {
+                    document.getElementById('phBadge').innerText = data.phLevel;
+                }
+
+                // TDS Level
+                if (data.tdsLevel !== undefined) {
+                    document.getElementById('tdsValueText').innerText = data.tdsLevel + " ppm";
+                }
+            }
+        });
+
+        // Pag-control sa Refill Water Button patungong Firebase
+        let isRefilling = false;
+        window.toggleWaterAction = function() {
+            isRefilling = !isRefilling;
+            const btn = document.getElementById('waterBtn');
+            const statusTxt = document.getElementById('waterStatusText');
+            
+            if (isRefilling) {
+                btn.innerText = "Stop Refill";
+                btn.classList.add('btn-stop');
+                statusTxt.style.display = 'block';
+            } else {
+                btn.innerText = "Refill Water";
+                btn.classList.remove('btn-stop');
+                statusTxt.style.display = 'none';
+            }
+
+            set(ref(db, 'controls/refillWater'), isRefilling);
+        }
+
+        // Pag-control sa Dispense Feed Button patungong Firebase
+        let isDispensing = false;
+        window.toggleFeedAction = function() {
+            isDispensing = !isDispensing;
+            const btn = document.getElementById('feedBtn');
+            const statusTxt = document.getElementById('feedStatusText');
+            
+            if (isDispensing) {
+                btn.innerText = "Stop Dispense";
+                btn.classList.add('btn-stop');
+                statusTxt.style.display = 'block';
+            } else {
+                btn.innerText = "Dispense";
+                btn.classList.remove('btn-stop');
+                statusTxt.style.display = 'none';
+            }
+
+            set(ref(db, 'controls/dispenseFeed'), isDispensing);
+        }
+
+        // Automation Switch
+        window.updateAutomation = function() {
+            const isAuto = document.getElementById('autoToggle').checked;
+            set(ref(db, 'controls/automation'), isAuto);
+            
+        }
+    </script>
+
+    <script>
+        function checkTheme() {
+            if(localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        }
+    </script>
+</body>
+</html>

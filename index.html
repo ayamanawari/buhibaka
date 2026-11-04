@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buhibaka - Welcome</title>
+    
+    <!-- I-load ang firebase.js bilang module -->
+    <script type="module" src="firebase.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #e8e2d5 0%, #d5cbb8 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #223520;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 850px;
+            background: linear-gradient(180deg, #f4efe6 0%, #e6ddcc 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px 24px 20px 24px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        @media (min-width: 440px) {
+            .app-container {
+                border-radius: 36px;
+                border: 6px solid #bfae96;
+                height: 88vh;
+            }
+        }
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .large-logo-wrapper {
+            width: 95px;
+            height: 95px;
+            border-radius: 50%;
+            background: rgba(59, 93, 56, 0.08);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(59, 93, 56, 0.15);
+            margin-bottom: 10px;
+        }
+        .large-logo-wrapper img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .hero-text h1 {
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 4px;
+            color: #223520;
+            letter-spacing: 0.5px;
+        }
+        .hero-text p {
+            font-size: 11px;
+            color: #4a5c48;
+            line-height: 1.3;
+            padding: 0 10px;
+        }
+        .bottom-section {
+            width: 100%;
+        }
+        .form-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #223520;
+            margin-bottom: 12px;
+            text-align: left;
+        }
+        .form-inputs {
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-inputs input {
+            width: 100%;
+            padding: 11px 14px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(59, 93, 56, 0.2);
+            border-radius: 12px;
+            font-size: 13px;
+            color: #223520;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .form-inputs input::placeholder {
+            color: #7b8c79;
+        }
+        .form-inputs input:focus {
+            border-color: #3b5d38;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Clean & Professional Password Field Wrapper */
+        .password-field-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+        .password-field-wrapper input {
+            padding-right: 42px;
+        }
+        .toggle-password-btn {
+            position: absolute;
+            right: 12px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5c6e5a;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        .toggle-password-btn:hover {
+            opacity: 1;
+        }
+        .toggle-password-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .forgot-container {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        .forgot-link {
+            font-size: 11px;
+            color: #3b5d38;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #3b5d38 0%, #223520 100%);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(34, 53, 32, 0.2);
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+        .switch-prompt {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 11px;
+            color: #4a5c48;
+        }
+        .switch-prompt span {
+            color: #3b5d38;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .switch-prompt span:hover {
+            text-decoration: underline;
+        }
+        .footer-info {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 10px;
+            color: #5c6e5a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div></div>
+
+        <div class="hero-section">
+            <div class="large-logo-wrapper">
+                <img src="buhibakalogo.jpg" alt="Buhibaka Logo">
+            </div>
+            <div class="hero-text">
+                <h1>Buhibaka</h1>
+                <p>Stay connected to your automated calf pen and monitor water conditions seamlessly.</p>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="form-title" id="formTitle">Log In</div>
+
+            <form id="authForm" onsubmit="handleSubmit(event)">
+                <div class="form-inputs" id="inputContainer"></div>
+                <div id="forgotPasswordWrapper" class="forgot-container">
+                    <a href="#" class="forgot-link" onclick="handleForgotPassword(event)">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn-submit" id="submitBtn">Log In</button>
+            </form>
+
+            <div class="switch-prompt" id="switchPrompt">
+                Not registered yet? <span onclick="switchMode('signup')">Sign Up</span>
+            </div>
+
+            <div class="footer-info">
+                <span>ESP32 IoT System • Powered by Wi-Fi AP</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gamit ang Modular JS approach -->
+    <script type="module">
+        import { auth } from "./firebase.js";
+        import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+        let isVerifyingOTP = false;
+        let generatedOTP = "";
+        let isForgotFlow = false;
+        let forgotStep = 1;
+        let resetOTP = "";
+
+        // SVG Icons para sa Propesyonal na Toggle Button
+        const eyeIconSVG = `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+        const eyeOffIconSVG = `<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            switchMode('login');
+        });
+
+        window.togglePasswordVisibility = function(inputId, btn) {
+            const passInput = document.getElementById(inputId);
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                btn.innerHTML = eyeOffIconSVG;
+            } else {
+                passInput.type = 'password';
+                btn.innerHTML = eyeIconSVG;
+            }
+        }
+
+        window.switchMode = function(mode) {
+            isVerifyingOTP = false;
+            isForgotFlow = false;
+            const formTitle = document.getElementById('formTitle');
+            const inputContainer = document.getElementById('inputContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            const forgotWrapper = document.getElementById('forgotPasswordWrapper');
+            const switchPrompt = document.getElementById('switchPrompt');
+
+            if (mode === 'login') {
+                formTitle.innerText = 'Log In';
+                submitBtn.innerText = 'Log In';
+                forgotWrapper.style.display = 'block';
+                switchPrompt.style.display = 'block';
+                switchPrompt.innerHTML = `Not registered yet? <span onclick="switchMode('signup')">Sign Up</span>`;
+                
+                inputContainer.innerHTML = `
+                    <input type="email" id="username" name="username" placeholder="Email Address (e.g. caretaker@gmail.com)" required>
+                    <div class="password-field-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('password', this)" title="Show/Hide Password">
+                            ${eyeIconSVG}
+                        </button>
+                    </div>
+                `;
+            } else {
+                formTitle.innerText = 'Sign Up';
+                submitBtn.innerText = 'Sign Up';
+                forgotWrapper.style.display = 'none';
+                switchPrompt.style.display = 'block';
+                switchPrompt.innerHTML = `Already have an account? <span onclick="switchMode('login')">Log In</span>`;
+                
+                inputContainer.innerHTML = `
+                    <input type="text" id="fullname" name="fullname" placeholder="Full Name (e.g. Juan Dela Cruz)" required>
+                    <input type="email" id="new_username" name="username" placeholder="Email Address (e.g. caretaker@gmail.com)" required>
+                    <input type="tel" id="phone" name="phone" placeholder="Phone Number (e.g. 09123456789)" required>
+                    <div class="password-field-wrapper">
+                        <input type="password" id="new_password" name="password" placeholder="Create Password" required>
+                        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('new_password', this)" title="Show/Hide Password">
+                            ${eyeIconSVG}
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        window.handleSubmit = async function(event) {
+            event.preventDefault();
+            const formTitle = document.getElementById('formTitle');
+            const inputContainer = document.getElementById('inputContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            const switchPrompt = document.getElementById('switchPrompt');
+
+            if (isForgotFlow) {
+                if (forgotStep === 1) {
+                    const recoveryInput = document.getElementById('recovery_id').value;
+                    if (recoveryInput.trim() === "") {
+                        alert("Please enter your Caretaker ID or Phone Number.");
+                        return;
+                    }
+
+                    resetOTP = Math.floor(1000 + Math.random() * 9000).toString();
+                    alert(`[SMS Simulation Sent]\nA password reset code has been sent to your mobile: ${resetOTP}`);
+
+                    forgotStep = 2;
+                    formTitle.innerText = 'Verify Code';
+                    submitBtn.innerText = 'Verify Code';
+                    inputContainer.innerHTML = `
+                        <p style="font-size: 11px; color: #4a5c48; margin-bottom: 5px;">Enter the 4-digit code sent to your mobile.</p>
+                        <input type="text" id="reset_otp" name="reset_otp" placeholder="Enter 4-digit Code" maxlength="4" required>
+                    `;
+                } else if (forgotStep === 2) {
+                    const enteredOTP = document.getElementById('reset_otp').value;
+                    if (enteredOTP === resetOTP) {
+                        forgotStep = 3;
+                        formTitle.innerText = 'New Password';
+                        submitBtn.innerText = 'Update Password';
+                        inputContainer.innerHTML = `
+                            <p style="font-size: 11px; color: #4a5c48; margin-bottom: 5px;">Create your new password.</p>
+                            <div class="password-field-wrapper">
+                                <input type="password" id="new_reset_pass" name="new_reset_pass" placeholder="New Password" required>
+                                <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('new_reset_pass', this)" title="Show/Hide Password">
+                                    ${eyeIconSVG}
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        alert("Invalid code! Please try again.");
+                    }
+                } else if (forgotStep === 3) {
+                    const newPass = document.getElementById('new_reset_pass').value;
+                    if (newPass.length < 6) {
+                        alert("Password must be at least 6 characters long.");
+                        return;
+                    }
+                    alert("Tagumpay! Na-update na ang iyong password. Mag-log in gamit ang bago mong password.");
+                    isForgotFlow = false;
+                    switchMode('login');
+                }
+            } else if (!isVerifyingOTP && formTitle.innerText === 'Sign Up') {
+                const email = document.getElementById('new_username').value;
+                const password = document.getElementById('new_password').value;
+
+                try {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    
+                    isVerifyingOTP = true;
+                    generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
+                    const phoneNumber = document.getElementById('phone').value;
+                    
+                    alert(`[SMS Simulation Sent to ${phoneNumber}]\nIsang verification code ang ipinadala: ${generatedOTP}`);
+
+                    formTitle.innerText = 'Verify Phone Number';
+                    submitBtn.innerText = 'Verify & Register';
+                    switchPrompt.style.display = 'none';
+
+                    inputContainer.innerHTML = `
+                        <p style="font-size: 12px; color: #4a5c48; margin-bottom: 5px;">Ilagay ang 4-digit code na ipinadala sa iyong mobile number.</p>
+                        <input type="text" id="otp_code" name="otp_code" placeholder="Enter 4-digit Code" maxlength="4" required>
+                    `;
+                } catch (error) {
+                    alert("Sign Up Error: " + error.message);
+                }
+            } else if (isVerifyingOTP) {
+                const enteredOTP = document.getElementById('otp_code').value;
+
+                if (enteredOTP === generatedOTP) {
+                    alert("Tagumpay! Na-verify ang iyong numero. Nakarehistro ka na.");
+                    localStorage.setItem('buhibaka_caretaker', 'active');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert("Maling verification code! Subukang muli.");
+                }
+            } else {
+                const email = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    localStorage.setItem('buhibaka_caretaker', 'active');
+                    window.location.href = 'dashboard.html';
+                } catch (error) {
+                    alert("Log In Failed: " + error.message);
+                }
+            }
+        }
+
+        window.handleForgotPassword = function(event) {
+            event.preventDefault();
+            isForgotFlow = true;
+            forgotStep = 1;
+
+            const formTitle = document.getElementById('formTitle');
+            const inputContainer = document.getElementById('inputContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            const forgotWrapper = document.getElementById('forgotPasswordWrapper');
+            const switchPrompt = document.getElementById('switchPrompt');
+
+            formTitle.innerText = 'Reset Password';
+            submitBtn.innerText = 'Send Reset Code';
+            forgotWrapper.style.display = 'none';
+            switchPrompt.style.display = 'block';
+            switchPrompt.innerHTML = `Bumalik sa <span onclick="switchMode('login')">Log In</span>`;
+
+            inputContainer.innerHTML = `
+                <p style="font-size: 11px; color: #4a5c48; margin-bottom: 5px;">Enter your Caretaker ID or Registered Phone Number.</p>
+                <input type="text" id="recovery_id" name="recovery_id" placeholder="Caretaker ID or Phone Number" required>
+            `;
+        }
+    </script>
+</body>
+</html>

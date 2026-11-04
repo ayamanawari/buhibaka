@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buhibaka - System History Logs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-gradient: #e8e3d5;
+            --text-color: #2c352d;
+            --card-bg: #f4f0e6;
+            --card-border: rgba(44, 53, 45, 0.12);
+            --subtext-color: #586359;
+            --val-color: #274d31;
+            --navbar-bg: rgba(255, 255, 255, 0.9);
+            --navbar-border: rgba(59, 93, 56, 0.15);
+            --nav-item-color: #4a5c48;
+            --nav-active-color: #3b5d38;
+        }
+
+        .dark-mode {
+            --bg-gradient: linear-gradient(135deg, #121c11 0%, #0a1109 100%);
+            --text-color: #d4ebd0;
+            --card-bg: rgba(20, 32, 19, 0.6);
+            --card-border: rgba(92, 143, 88, 0.3);
+            --subtext-color: #85bc81;
+            --val-color: #85bc81;
+            --navbar-bg: rgba(20, 32, 19, 0.9);
+            --navbar-border: rgba(92, 143, 88, 0.3);
+            --nav-item-color: #a3c9a0;
+            --nav-active-color: #85bc81;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        body {
+            background: var(--bg-gradient);
+            background-color: var(--bg-gradient);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+            padding-bottom: 30px;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 700px;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 16px;
+            position: relative;
+        }
+        
+        /* Header Section */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 14px;
+        }
+        .header-section h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        /* Clean Search Bar */
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .search-input {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 10px 14px 10px 36px;
+            border-radius: 18px;
+            font-size: 12px;
+            color: var(--text-color);
+            outline: none;
+            box-shadow: 0 4px 12px rgba(44, 53, 45, 0.05);
+            transition: all 0.2s;
+        }
+        .search-input:focus {
+            background: var(--card-bg);
+            border-color: var(--val-color);
+            box-shadow: 0 6px 16px rgba(44, 53, 45, 0.1);
+        }
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            color: var(--subtext-color);
+        }
+
+        /* Live Indicator */
+        .sub-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .live-status {
+            font-size: 11px;
+            color: var(--subtext-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--val-color);
+            border-radius: 50%;
+            box-shadow: 0 0 0 rgba(39, 77, 49, 0.4);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(39, 77, 49, 0.6); }
+            70% { box-shadow: 0 0 0 6px rgba(39, 77, 49, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 77, 49, 0); }
+        }
+
+        /* Filter Pills */
+        .filters {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+        .filters::-webkit-scrollbar {
+            display: none;
+        }
+        .filter-pill {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--subtext-color);
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(44, 53, 45, 0.05);
+            transition: all 0.2s;
+        }
+        .filter-pill.active, .filter-pill:hover {
+            background: var(--val-color);
+            color: white;
+            border-color: var(--val-color);
+        }
+        
+        /* Logs List Container */
+        .logs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* Date Section Headers */
+        .date-header {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--subtext-color);
+            margin-top: 8px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Log Card */
+        .log-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-left: 5px solid var(--val-color);
+            border-radius: 18px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 6px 16px rgba(44, 53, 45, 0.08);
+            transition: all 0.2s;
+        }
+        .log-card.warning {
+            border-left-color: #d9822b;
+        }
+        .log-card.info {
+            border-left-color: #2979ff;
+        }
+        .log-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(44, 53, 45, 0.12);
+        }
+        .log-info h4 {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 2px;
+        }
+        .log-info p {
+            font-size: 11px;
+            color: var(--subtext-color);
+            line-height: 1.3;
+        }
+        .log-time {
+            font-size: 11px;
+            color: var(--subtext-color);
+            font-weight: 600;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        /* Bottom Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background: var(--navbar-bg);
+            border-top: 1px solid var(--navbar-border);
+            padding: 10px 0;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 700px;
+            margin-top: auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .nav-item {
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--nav-item-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            transition: color 0.2s;
+        }
+        .nav-item.active {
+            color: var(--nav-active-color);
+            font-weight: 700;
+        }
+        .nav-item:hover {
+            color: var(--nav-active-color);
+        }
+    </style>
+</head>
+<body onload="checkTheme()">
+
+    <div class="app-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <h1>System Logs</h1>
+        </div>
+
+        <!-- Clean Search Bar with FontAwesome Icon -->
+        <div class="search-box">
+            <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search logs..." onkeyup="searchLogs()">
+        </div>
+
+        <div class="sub-header">
+            <div class="live-status">
+                <span class="pulse-dot"></span> Live ESP32 & Firebase Sync
+            </div>
+        </div>
+
+        <!-- Filter Categories -->
+        <div class="filters">
+            <div class="filter-pill active" onclick="filterLogs('all', event)">All</div>
+            <div class="filter-pill" onclick="filterLogs('water', event)">Water</div>
+            <div class="filter-pill" onclick="filterLogs('feeding', event)">Feeding</div>
+            <div class="filter-pill" onclick="filterLogs('sensors', event)">Sensors</div>
+            <div class="filter-pill" onclick="filterLogs('system', event)">System</div>
+        </div>
+
+        <!-- Logs Section -->
+        <div class="logs-container" id="logsContainer">
+            <div class="date-header">Live Firebase Logs</div>
+            <div id="dynamicLogsList">
+                <!-- Dito papasok ang real-time logs mula sa Firebase -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="navbar">
+        <a href="dashboard.html" class="nav-item">Dashboard</a>
+        <a href="history.html" class="nav-item active">History</a>
+        <a href="settings.html" class="nav-item">Settings</a>
+        <a href="sms_guide.html" class="nav-item">SMS Guide</a>
+        <a href="index.html" class="nav-item" style="color: #a94442; font-weight: bold;">Log Out</a>
+    </div>
+
+    <!-- Firebase Realtime Database Integration Script -->
+    <script type="module">
+        import { db, ref, onValue } from "./firebase.js";
+
+        // Pakikinig sa 'logs/' node sa Firebase Realtime Database
+        const logsRef = ref(db, 'logs/');
+        onValue(logsRef, (snapshot) => {
+            const data = snapshot.val();
+            const container = document.getElementById('dynamicLogsList');
+            container.innerHTML = ''; // Linisin muna
+
+            if (data) {
+                // I-convert ang Firebase object papuntang array at pagkabit-kabitin
+                const logsArray = Object.values(data).reverse(); // Pinakabagong log sa itaas
+
+                logsArray.forEach(log => {
+                    let cardClass = 'log-card';
+                    if (log.type === 'warning') cardClass += ' warning';
+                    if (log.type === 'info') cardClass += ' info';
+
+                    const card = document.createElement('div');
+                    card.className = cardClass;
+                    card.setAttribute('data-category', log.category || 'system');
+                    
+                    card.innerHTML = `
+                        <div class="log-info">
+                            <h4>${log.title || 'System Notification'}</h4>
+                            <p>${log.message || ''}</p>
+                        </div>
+                        <div class="log-time">${log.time || ''}</div>
+                    `;
+                    container.appendChild(card);
+                });
+                applyFilters(); // I-apply ang active search/filter pagka-load
+            } else {
+                container.innerHTML = '<p style="font-size: 11px; color: var(--subtext-color); text-align: center; padding: 10px;">Walang nakatalang logs sa Firebase.</p>';
+            }
+        });
+    </script>
+
+    <script>
+        let currentCategory = 'all';
+
+        function filterLogs(category, eventObj) {
+            currentCategory = category;
+            document.querySelectorAll('.filter-pill').forEach(pill => pill.classList.remove('active'));
+            if (eventObj && eventObj.currentTarget) {
+                eventObj.currentTarget.classList.add('active');
+            }
+            applyFilters();
+        }
+
+        function searchLogs() {
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.log-card');
+            
+            cards.forEach(card => {
+                const category = card.dataset.category;
+                const text = card.innerText.toLowerCase();
+                
+                const matchesCategory = (currentCategory === 'all' || category === currentCategory);
+                const matchesSearch = text.includes(query);
+
+                if (matchesCategory && matchesSearch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function checkTheme() {
+            if(localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        }
+    </script>
+
+</body>
+</html>

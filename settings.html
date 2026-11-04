@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buhibaka - Settings</title>
+    <!-- FontAwesome CDN para sa icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Color Themes using CSS Variables */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #e8e2d5 0%, #d5cbb8 100%);
+            --text-color: #223520;
+            --card-bg: rgba(255, 255, 255, 0.45);
+            --card-border: rgba(59, 93, 56, 0.2);
+            --header-border: rgba(59, 93, 56, 0.15);
+            --heading-color: #3b5d38;
+            --label-color: #4a5c48;
+            --input-bg: rgba(255, 255, 255, 0.3);
+            --input-active-bg: rgba(255, 255, 255, 0.95);
+            --input-text: #223520;
+            --helper-color: #3b5d38;
+            --btn-bg: rgba(224, 213, 193, 0.8);
+            --btn-border: #bfae95;
+            --btn-hover: rgba(209, 195, 173, 1);
+            --navbar-bg: rgba(255, 255, 255, 0.45);
+            --shadow: rgba(0,0,0,0.03);
+        }
+
+        .dark-mode {
+            --bg-gradient: linear-gradient(135deg, #121c11 0%, #0a1109 100%);
+            --text-color: #d4ebd0;
+            --card-bg: rgba(20, 32, 19, 0.6);
+            --card-border: rgba(92, 143, 88, 0.3);
+            --header-border: rgba(92, 143, 88, 0.2);
+            --heading-color: #85bc81;
+            --label-color: #a3c9a0;
+            --input-bg: rgba(10, 17, 9, 0.4);
+            --input-active-bg: rgba(20, 32, 19, 0.95);
+            --input-text: #d4ebd0;
+            --helper-color: #85bc81;
+            --btn-bg: rgba(45, 66, 43, 0.8);
+            --btn-border: #5f8f5c;
+            --btn-hover: rgba(59, 87, 56, 1);
+            --navbar-bg: rgba(20, 32, 19, 0.6);
+            --shadow: rgba(0,0,0,0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: var(--bg-gradient);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+            padding-bottom: 30px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 700px;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 16px;
+            position: relative;
+        }
+        
+        /* Header Section */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--header-border);
+            margin-bottom: 14px;
+        }
+        .header-section h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            background: var(--btn-bg);
+            border: 1px solid var(--btn-border);
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .theme-toggle-btn:hover {
+            background: var(--btn-hover);
+        }
+
+        /* Transparent Section Card */
+        .section-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px var(--shadow);
+            transition: background 0.3s, border 0.3s;
+        }
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--header-border);
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+        }
+        .section-card h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--heading-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        /* Button Group para sa Edit/Save/Cancel */
+        .button-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--label-color);
+            margin-bottom: 4px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            padding: 9px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--input-text);
+            outline: none;
+            transition: all 0.2s;
+        }
+        .form-group option {
+            background-color: var(--input-active-bg);
+            color: var(--input-text);
+        }
+        /* Istilo kapag nai-edit na ang field */
+        .form-group input:not([readonly]), 
+        .form-group select:not(:disabled) {
+            background: var(--input-active-bg) !important;
+            border-color: var(--heading-color) !important;
+            box-shadow: 0 0 5px var(--card-border);
+        }
+        .helper-text {
+            font-size: 10.5px;
+            color: var(--helper-color);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            padding: 5px 12px;
+            background-color: var(--btn-bg);
+            border: 1px solid var(--btn-border);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-action:hover {
+            background-color: var(--btn-hover);
+        }
+        .btn-action.save-btn {
+            background-color: #3b5d38;
+            color: white;
+            border-color: #2e4a2c;
+        }
+        .btn-action.save-btn:hover {
+            background-color: #2e4a2c;
+        }
+        .btn-action.cancel-btn {
+            background-color: #a94442;
+            color: white;
+            border-color: #843534;
+        }
+        .btn-action.cancel-btn:hover {
+            background-color: #8c3634;
+        }
+
+        /* Transparent Bottom Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-top: 1px solid var(--card-border);
+            padding: 10px 0;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 700px;
+            margin-top: auto;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: background 0.3s;
+        }
+        .nav-item {
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--label-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            transition: color 0.2s;
+        }
+        .nav-item.active {
+            color: var(--heading-color);
+            font-weight: 700;
+        }
+        .nav-item:hover {
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body onload="loadSavedSettings()">
+
+    <div class="app-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <h1>System Settings</h1>
+            <button type="button" class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()">
+                <i class="fa-solid fa-moon" id="theme-icon"></i> <span id="theme-text">Dark Mode</span>
+            </button>
+        </div>
+
+        <!-- Water Refill Configuration -->
+        <div class="section-card">
+            <div class="card-header-row">
+                <h3>Water Refill Configuration</h3>
+                <div class="button-group" id="water-buttons">
+                    <button type="button" class="btn-action" onclick="enableEdit('water')">Edit</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="min-water">Min Water Trough Level Trigger (%) [Auto-Refill]</label>
+                <input type="number" id="min-water" value="25" min="1" max="99" readonly oninput="updateWaterCalculations()">
+                <div class="helper-text">💧 Remaining Water at Trigger: <strong id="remaining-water">4.69 Liters</strong> (out of 18.75L max capacity)</div>
+            </div>
+            <div class="form-group">
+                <label for="refill-amount">Target Refill Volume to Add</label>
+                <input type="text" id="refill-amount" value="14.06 Liters (To reach full 18.75L)" readonly style="cursor: not-allowed;">
+                <div class="helper-text">⚡ Water Amount to Pump: <strong id="pump-water">14.06 Liters</strong> per refill cycle</div>
+            </div>
+        </div>
+
+        <!-- Water Quality Parameters (pH, Turbidity, TDS) -->
+        <div class="section-card">
+            <div class="card-header-row">
+                <h3>Water Quality Thresholds (pH, Turbidity, TDS)</h3>
+                <div class="button-group" id="quality-buttons">
+                    <button type="button" class="btn-action" onclick="enableEdit('quality')">Edit</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ph-min">Target Min pH Level</label>
+                <input type="number" id="ph-min" value="6.5" step="0.1" min="0" max="14" readonly>
+            </div>
+            <div class="form-group">
+                <label for="ph-max">Target Max pH Level</label>
+                <input type="number" id="ph-max" value="8.5" step="0.1" min="0" max="14" readonly>
+            </div>
+            <div class="form-group">
+                <label for="turbidity-max">Max Turbidity Limit (NTU)</label>
+                <input type="number" id="turbidity-max" value="50" step="1" readonly>
+            </div>
+            <div class="form-group">
+                <label for="tds-max">Max TDS Limit (ppm)</label>
+                <input type="number" id="tds-max" value="500" step="10" readonly>
+            </div>
+        </div>
+
+        <!-- Feeding Configuration -->
+        <div class="section-card">
+            <div class="card-header-row">
+                <h3>Feeding Schedule Configuration</h3>
+                <div class="button-group" id="feed-buttons">
+                    <button type="button" class="btn-action" onclick="enableEdit('feed')">Edit</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="feed-frequency">Feeding Frequency</label>
+                <select id="feed-frequency" disabled>
+                    <option value="2">2 Times a Day (Morning / Afternoon)</option>
+                    <option value="3" selected>3 Times a Day (Morning / Noon / Evening)</option>
+                    <option value="4">4 Times a Day</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="feed-amount">Default Feed Dispense Amount per Cycle (kg)</label>
+                <input type="number" id="feed-amount" value="5.0" step="0.5" readonly>
+            </div>
+        </div>
+
+        <!-- Caretaker Contact -->
+        <div class="section-card">
+            <div class="card-header-row">
+                <h3>Caretaker Contact</h3>
+                <div class="button-group" id="contact-buttons">
+                    <button type="button" class="btn-action" onclick="enableEdit('contact')">Edit</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phone-num">Mobile Number for SMS Alerts</label>
+                <input type="text" id="phone-num" value="+639123456789" readonly>
+                <div class="helper-text" id="contact-helper">📱 Registered mobile number for system alerts & verification.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="navbar">
+        <a href="dashboard.html" class="nav-item">Dashboard</a>
+        <a href="history.html" class="nav-item">History</a>
+        <a href="settings.html" class="nav-item active">Settings</a>
+        <a href="sms_guide.html" class="nav-item">SMS Guide</a>
+        <a href="index.html" class="nav-item" style="color: #a94442; font-weight: bold;">Log Out</a>
+    </div>
+
+    <script>
+        let originalValues = {};
+
+        function loadSavedSettings() {
+            // Load Theme Preference
+            if(localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('theme-icon').className = "fa-solid fa-sun";
+                document.getElementById('theme-text').innerText = "Light Mode";
+            }
+
+            // Load Other Settings
+            if(localStorage.getItem('minWater')) {
+                document.getElementById('min-water').value = localStorage.getItem('minWater');
+                updateWaterCalculations();
+            }
+            if(localStorage.getItem('phMin')) {
+                document.getElementById('ph-min').value = localStorage.getItem('phMin');
+            }
+            if(localStorage.getItem('phMax')) {
+                document.getElementById('ph-max').value = localStorage.getItem('phMax');
+            }
+            if(localStorage.getItem('turbidityMax')) {
+                document.getElementById('turbidity-max').value = localStorage.getItem('turbidityMax');
+            }
+            if(localStorage.getItem('tdsMax')) {
+                document.getElementById('tds-max').value = localStorage.getItem('tdsMax');
+            }
+            if(localStorage.getItem('feedFreq')) {
+                document.getElementById('feed-frequency').value = localStorage.getItem('feedFreq');
+            }
+            if(localStorage.getItem('feedAmount')) {
+                document.getElementById('feed-amount').value = localStorage.getItem('feedAmount');
+            }
+            if(localStorage.getItem('caretakerPhone')) {
+                document.getElementById('phone-num').value = localStorage.getItem('caretakerPhone');
+            }
+            backupValues();
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            let icon = document.getElementById('theme-icon');
+            let text = document.getElementById('theme-text');
+
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                icon.className = "fa-solid fa-sun";
+                text.innerText = "Light Mode";
+            } else {
+                localStorage.setItem('theme', 'light');
+                icon.className = "fa-solid fa-moon";
+                text.innerText = "Dark Mode";
+            }
+        }
+
+        function backupValues() {
+            originalValues.water = document.getElementById('min-water').value;
+            originalValues.phMin = document.getElementById('ph-min').value;
+            originalValues.phMax = document.getElementById('ph-max').value;
+            originalValues.turbidityMax = document.getElementById('turbidity-max').value;
+            originalValues.tdsMax = document.getElementById('tds-max').value;
+            originalValues.feedFreq = document.getElementById('feed-frequency').value;
+            originalValues.feedAmount = document.getElementById('feed-amount').value;
+            originalValues.contact = document.getElementById('phone-num').value;
+        }
+
+        function updateWaterCalculations() {
+            const maxCapacity = 18.75; 
+            let percentInput = document.getElementById('min-water').value;
+            let percent = parseFloat(percentInput);
+
+            if (isNaN(percent) || percent < 0) percent = 0;
+            if (percent > 100) percent = 100;
+
+            let remaining = (maxCapacity * (percent / 100)).toFixed(2);
+            let refillNeeded = (maxCapacity - remaining).toFixed(2);
+
+            document.getElementById('remaining-water').innerText = remaining + " Liters";
+            document.getElementById('refill-amount').value = refillNeeded + " Liters (To reach full 18.75L)";
+            document.getElementById('pump-water').innerText = refillNeeded + " Liters";
+        }
+
+        function enableEdit(section) {
+            if (section === 'water') {
+                let input = document.getElementById('min-water');
+                input.removeAttribute('readonly');
+                input.focus();
+                document.getElementById('water-buttons').innerHTML = `
+                    <button type="button" class="btn-action save-btn" onclick="saveSettings('water')">Save</button>
+                    <button type="button" class="btn-action cancel-btn" onclick="cancelEdit('water')">Cancel</button>
+                `;
+            } else if (section === 'quality') {
+                document.getElementById('ph-min').removeAttribute('readonly');
+                document.getElementById('ph-max').removeAttribute('readonly');
+                document.getElementById('turbidity-max').removeAttribute('readonly');
+                document.getElementById('tds-max').removeAttribute('readonly');
+                document.getElementById('ph-min').focus();
+                document.getElementById('quality-buttons').innerHTML = `
+                    <button type="button" class="btn-action save-btn" onclick="saveSettings('quality')">Save</button>
+                    <button type="button" class="btn-action cancel-btn" onclick="cancelEdit('quality')">Cancel</button>
+                `;
+            } else if (section === 'feed') {
+                document.getElementById('feed-frequency').removeAttribute('disabled');
+                let input = document.getElementById('feed-amount');
+                input.removeAttribute('readonly');
+                input.focus();
+                document.getElementById('feed-buttons').innerHTML = `
+                    <button type="button" class="btn-action save-btn" onclick="saveSettings('feed')">Save</button>
+                    <button type="button" class="btn-action cancel-btn" onclick="cancelEdit('feed')">Cancel</button>
+                `;
+            } else if (section === 'contact') {
+                let input = document.getElementById('phone-num');
+                input.removeAttribute('readonly');
+                input.focus();
+                document.getElementById('contact-helper').innerText = "⚠️ Enter new number and click 'Send PIN' to verify via SMS.";
+                document.getElementById('contact-buttons').innerHTML = `
+                    <button type="button" class="btn-action save-btn" onclick="initiateContactSave()">Send PIN</button>
+                    <button type="button" class="btn-action cancel-btn" onclick="cancelEdit('contact')">Cancel</button>
+                `;
+            }
+        }
+
+        let simulatedPin = "";
+
+        function initiateContactSave() {
+            let input = document.getElementById('phone-num');
+            simulatedPin = Math.floor(1000 + Math.random() * 9000).toString();
+            alert(`[SMS Simulation] A verification PIN code has been sent to ${input.value}.\n(For testing, your PIN is: ${simulatedPin})`);
+            
+            let enteredPin = prompt("Enter the 4-digit PIN sent via SMS to confirm number change:");
+            if (enteredPin === simulatedPin) {
+                document.getElementById('contact-helper').innerText = "✅ PIN verified! Click 'Save' to update number.";
+                document.getElementById('contact-buttons').innerHTML = `
+                    <button type="button" class="btn-action save-btn" onclick="saveSettings('contact')">Save</button>
+                    <button type="button" class="btn-action cancel-btn" onclick="cancelEdit('contact')">Cancel</button>
+                `;
+            } else {
+                alert("Incorrect PIN! Changes cancelled.");
+                cancelEdit('contact');
+            }
+        }
+
+        function saveSettings(section) {
+            if (section === 'water') {
+                let input = document.getElementById('min-water');
+                input.setAttribute('readonly', true);
+                localStorage.setItem('minWater', input.value);
+                document.getElementById('water-buttons').innerHTML = `
+                    <button type="button" class="btn-action" onclick="enableEdit('water')">Edit</button>
+                `;
+                alert('Water settings saved successfully!');
+            } else if (section === 'quality') {
+                let phMin = document.getElementById('ph-min');
+                let phMax = document.getElementById('ph-max');
+                let turb = document.getElementById('turbidity-max');
+                let tds = document.getElementById('tds-max');
+
+                phMin.setAttribute('readonly', true);
+                phMax.setAttribute('readonly', true);
+                turb.setAttribute('readonly', true);
+                tds.setAttribute('readonly', true);
+
+                localStorage.setItem('phMin', phMin.value);
+                localStorage.setItem('phMax', phMax.value);
+                localStorage.setItem('turbidityMax', turb.value);
+                localStorage.setItem('tdsMax', tds.value);
+
+                document.getElementById('quality-buttons').innerHTML = `
+                    <button type="button" class="btn-action" onclick="enableEdit('quality')">Edit</button>
+                `;
+                alert('Water quality thresholds saved successfully!');
+            } else if (section === 'feed') {
+                let select = document.getElementById('feed-frequency');
+                let input = document.getElementById('feed-amount');
+                select.setAttribute('disabled', 'true');
+                input.setAttribute('readonly', true);
+                localStorage.setItem('feedFreq', select.value);
+                localStorage.setItem('feedAmount', input.value);
+                document.getElementById('feed-buttons').innerHTML = `
+                    <button type="button" class="btn-action" onclick="enableEdit('feed')">Edit</button>
+                `;
+                alert('Feeding settings saved successfully!');
+            } else if (section === 'contact') {
+                let input = document.getElementById('phone-num');
+                input.setAttribute('readonly', true);
+                localStorage.setItem('caretakerPhone', input.value);
+                document.getElementById('contact-helper').innerText = "📱 Registered mobile number for system alerts & verification.";
+                document.getElementById('contact-buttons').innerHTML = `
+                    <button type="button" class="btn-action" onclick="enableEdit('contact')">Edit</button>
+                `;
+                alert('Caretaker contact number updated successfully!');
+            }
+            backupValues();
+        }
+
+        function cancelEdit(section) {
+            if (section === 'water') {
+                let input = document.getElementById('min-water');
+                input.value = originalValues.water;
+                input.setAttribute('readonly', true);
+                updateWaterCalculations();
+                document.getElementById('water-buttons').innerHTML = `
+                    <button type="button" class="btn-action" onclick="enableEdit('water')">Edit</button>
+                `;
+            } else if (section === 'quality') {
+                let phMin = document.getElementById('ph-min');
+                let phMax = document.getElementById('ph-max');
+                let turb = document.getElementById('turbidity-max');
+                let tds = document.getElementById('tds-max');
+
+                phMin.value = originalValues.phMin;
+                phMax.value = originalValues.phMax;
+                turb.value = originalValues.turbidityMax;
+                tds.value = originalValues.tdsMax;
+
+                phMin.setAttribute('readonly', true);
+                phMax.setAttribute('readonly', true);
+                turb.setAttribute('readonly', true);
+                tds.setAttribute('readonly', true);
+
+                document.getElementById('quality-buttons').innerHTML = `
+                    <button type="button" class="btn-action" onclick="enableEdit('quality')">Edit</button>
+                `;
+            } else if (section === 'feed') {
+                let select = document.getElementById('feed-frequency');
+                let input = document.getElementById('feed-amount');
+                select.value = originalValues.feedFreq;
+                input.value = originalValues.feedAmount;
+                select.setAttribute('disabled', 'true');
+                input.setAttribute('readonly', true);
+                document.getElementById('feed-buttons').innerHTML = `
+                    <button type="button" class="btn-action" onclick="enableEdit('feed')">Edit</button>
+                `;
+            } else if (section === 'contact') {
+                let input = document.getElementById('phone-num');
+                input.value = originalValues.contact;
+                input.setAttribute('readonly', true);
+                document.getElementById('contact-helper').innerText = "📱 Registered mobile number for system alerts & verification.";
+                document.getElementById('contact-buttons').innerHTML = `
+                    <button type="button" class="btn-action" onclick="enableEdit('feed' || 'contact')">Edit</button>
+                `;
+                document.getElementById('contact-buttons').innerHTML = `
+                    <button type="button" class="btn-action" onclick="enableEdit('contact')">Edit</button>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
